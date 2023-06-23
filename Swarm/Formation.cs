@@ -297,17 +297,18 @@ namespace MissionPlanner.Swarm
 
                             // do pos/vel
                             port.setPositionTargetGlobalInt(mav.sysid, mav.compid, true,
-                                true, false, false,
+                                true, false, true,
                                 MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT_INT, target.Lat, target.Lng, target.Alt, vel.x,
-                                vel.y, vel.z, 0, 0);
+                                vel.y, vel.z, (Math.PI/180)*Leader.cs.yaw, 0.0f);
 
                             // do yaw
                             if (!gimbal)
                             {
                                 // within 3 degrees dont send
-                                if (Math.Abs(mav.cs.yaw - Leader.cs.yaw) > 3)
+                               /* if (Math.Abs(mav.cs.yaw - Leader.cs.yaw) > 3)
                                     port.doCommand(mav.sysid, mav.compid, MAVLink.MAV_CMD.CONDITION_YAW, Leader.cs.yaw,
-                                        100.0f, 0, 0, 0, 0, 0, false);
+                                        100.0f, 0, 0, 0, 0, 0, false);*/
+                               
                             }
                             else
                             {
