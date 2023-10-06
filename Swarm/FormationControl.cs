@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
+using System.Linq;
 
 namespace MissionPlanner.Swarm
 {
@@ -27,9 +28,11 @@ namespace MissionPlanner.Swarm
 
             foreach (var port in MainV2.Comports)
             {
-                foreach (var mav in port.MAVlist)
+                foreach (var mav in port.MAVlist.Where(index => index.compid == 1))
                 {
-                    mavStates.Add(port.BaseStream.PortName + " " + mav.sysid + " " + mav.compid, mav);
+                    //Don't add the telemtry mavlink objects( COMPONENTID = 68 )
+                   mavStates.Add(port.BaseStream.PortName + " " + mav.sysid + " " + mav.compid, mav);
+
                 }
             }
 
@@ -69,7 +72,7 @@ namespace MissionPlanner.Swarm
 
             foreach (var port in MainV2.Comports)
             {
-                foreach (var mav in port.MAVlist)
+                foreach (var mav in port.MAVlist.Where( index => index.compid == 1))
                 {
                     if (mav == SwarmInterface.getLeader())
                     {
@@ -91,7 +94,7 @@ namespace MissionPlanner.Swarm
         {
             foreach (var port in MainV2.Comports)
             {
-                foreach (var mav in port.MAVlist)
+                foreach (var mav in port.MAVlist.Where(index => index.compid == 1))
                 {
                     if (mav == CMB_mavs.SelectedValue)
                     {
@@ -274,7 +277,7 @@ namespace MissionPlanner.Swarm
         {
             foreach (var port in MainV2.Comports)
             {
-                foreach (var mav in port.MAVlist)
+                foreach (var mav in port.MAVlist.Where(index => index.compid == 1))
                 {
                     mav.cs.UpdateCurrentSettings(null, true, port, mav);
 
@@ -285,7 +288,7 @@ namespace MissionPlanner.Swarm
 
                     if (Math.Abs(offset.x) < 200 && Math.Abs(offset.y) < 200)
                     {
-                        grid1.UpdateIcon(mav, (float)offset.y, (float)offset.x, (float)offset.z, true);
+                   grid1.UpdateIcon(mav, (float)offset.y, (float)offset.x, (float)offset.z, true);
                         ((Formation)SwarmInterface).setOffsets(mav, offset.y, offset.x, offset.z);
                     }
                 }
@@ -317,7 +320,7 @@ namespace MissionPlanner.Swarm
             // setup new
             foreach (var port in MainV2.Comports)
             {
-                foreach (var mav in port.MAVlist)
+                foreach (var mav in port.MAVlist.Where(index => index.compid == 1))
                 {
                     bool exists = false;
                     foreach (Control ctl in PNL_status.Controls)
