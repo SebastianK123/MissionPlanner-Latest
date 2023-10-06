@@ -16,6 +16,8 @@ namespace MissionPlanner.Swarm
         Formation SwarmInterface = null;
         bool threadrun = false;
 
+        Dictionary<int, Vector3f> sensorStatus = new Dictionary<int, Vector3f>();
+
         public FormationControl()
         {
             InitializeComponent();
@@ -28,11 +30,12 @@ namespace MissionPlanner.Swarm
 
             foreach (var port in MainV2.Comports)
             {
-                foreach (var mav in port.MAVlist.Where(index => index.compid == 1))
-                {
-                    //Don't add the telemtry mavlink objects( COMPONENTID = 68 )
+                port.OnPacketReceived += MavOnOnPacketReceivedHandler;
+                foreach (var mav in port.MAVlist.Where(index => index.compid == (byte)MAVLink.MAV_COMPONENT.MAV_COMP_ID_AUTOPILOT1))
+                { 
                    mavStates.Add(port.BaseStream.PortName + " " + mav.sysid + " " + mav.compid, mav);
-
+                    //Add the sysId to a list
+                   sensorStatus.Add(mav.sysid, Vector3f.Zero);
                 }
             }
 
@@ -52,6 +55,17 @@ namespace MissionPlanner.Swarm
             MessageBox.Show("this is beta, use at own risk");
 
             MissionPlanner.Utilities.Tracking.AddPage(this.GetType().ToString(), this.Text);
+        }
+
+        private void MavOnOnPacketReceivedHandler(object o, MAVLink.MAVLinkMessage linkMessage)
+        {
+            if ((MAVLink.MAVLINK_MSG_ID)linkMessage.msgid == MAVLink.MAVLINK_MSG_ID.DEBUG_VECT)
+            {
+                //Decode the packet as sensor data, store using Mavlink.sysid
+                MAVLink.mavlink_debug_vect_t payload = (MAVLink.mavlink_debug_vect_t)linkMessage.data;
+                Vector3f status = new Vector3f(payload.x, payload.y, payload.z);
+                sensorStatus[linkMessage.sysid] = status;
+            }
         }
 
         void FollowLeaderControl_MouseWheel(object sender, MouseEventArgs e)
@@ -277,7 +291,7 @@ namespace MissionPlanner.Swarm
         {
             foreach (var port in MainV2.Comports)
             {
-                foreach (var mav in port.MAVlist.Where(index => index.compid == 1))
+                foreach (var mav in port.MAVlist.Where(index => index.compid == (byte)MAVLink.MAV_COMPONENT.MAV_COMP_ID_AUTOPILOT1))
                 {
                     mav.cs.UpdateCurrentSettings(null, true, port, mav);
 
@@ -320,7 +334,7 @@ namespace MissionPlanner.Swarm
             // setup new
             foreach (var port in MainV2.Comports)
             {
-                foreach (var mav in port.MAVlist.Where(index => index.compid == 1))
+                foreach (var mav in port.MAVlist.Where(index => index.compid == (byte)MAVLink.MAV_COMPONENT.MAV_COMP_ID_AUTOPILOT1))
                 {
                     bool exists = false;
                     foreach (Control ctl in PNL_status.Controls)
@@ -336,7 +350,7 @@ namespace MissionPlanner.Swarm
                                                          mav.GuidedMode.z;
                             ((Status)ctl).Location1.Text = mav.cs.lat + ",\n" + mav.cs.lng + ",\n" +
                                                             mav.cs.alt;
-
+                            ((Status)ctl).Speed.Text = sensorStatus[mav.sysid].x.ToString() + "\n" + sensorStatus[mav.sysid].y.ToString() + "\n" + sensorStatus[mav.sysid].z.ToString();
                             if (mav == SwarmInterface.Leader)
                             {
                                 ((Status)ctl).ForeColor = Color.Red;

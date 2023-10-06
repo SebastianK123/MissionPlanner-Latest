@@ -144,21 +144,20 @@
             // 
             // lbl_spd
             // 
-            this.lbl_spd.AutoSize = true;
             this.lbl_spd.Location = new System.Drawing.Point(46, 182);
             this.lbl_spd.Name = "lbl_spd";
-            this.lbl_spd.Size = new System.Drawing.Size(13, 13);
+            this.lbl_spd.Size = new System.Drawing.Size(81, 43);
             this.lbl_spd.TabIndex = 13;
-            this.lbl_spd.Text = "0";
+            this.lbl_spd.Text = "0.00000 0.00000 0.00000";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(3, 182);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(38, 13);
+            this.label8.Size = new System.Drawing.Size(35, 13);
             this.label8.TabIndex = 12;
-            this.label8.Text = "Speed";
+            this.label8.Text = "Probe";
             // 
             // Status
             // 
@@ -177,7 +176,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Status";
-            this.Size = new System.Drawing.Size(130, 202);
+            this.Size = new System.Drawing.Size(130, 224);
             this.ResumeLayout(false);
             this.PerformLayout();
 
