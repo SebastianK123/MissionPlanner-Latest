@@ -265,8 +265,9 @@ namespace MissionPlanner.Swarm
 
             norotation.x *= -1;
             norotation.y *= -1;
+            norotation.z = mav.cs.alt -leader.cs.alt;
 
-            return new Vector3(norotation.x * Math.Cos(heading * MathHelper.deg2rad) - norotation.y * Math.Sin(heading * MathHelper.deg2rad), norotation.x * Math.Sin(heading * MathHelper.deg2rad) + norotation.y * Math.Cos(heading * MathHelper.deg2rad), 0);
+            return new Vector3(norotation.x * Math.Cos(heading * MathHelper.deg2rad) - norotation.y * Math.Sin(heading * MathHelper.deg2rad), norotation.x * Math.Sin(heading * MathHelper.deg2rad) + norotation.y * Math.Cos(heading * MathHelper.deg2rad), norotation.z);
         }
 
         private void grid1_UpdateOffsets(MAVState mav, float x, float y, float z, Grid.icon ico)
@@ -350,7 +351,7 @@ namespace MissionPlanner.Swarm
                                                          mav.GuidedMode.z;
                             ((Status)ctl).Location1.Text = mav.cs.lat + ",\n" + mav.cs.lng + ",\n" +
                                                             mav.cs.alt;
-                            ((Status)ctl).Speed.Text = sensorStatus[mav.sysid].x.ToString() + "\n" + sensorStatus[mav.sysid].y.ToString() + "\n" + sensorStatus[mav.sysid].z.ToString();
+                            if(sensorStatus.ContainsKey(mav.sysid))((Status)ctl).Speed.Text = sensorStatus[mav.sysid].x.ToString() + "\n" + sensorStatus[mav.sysid].y.ToString() + "\n" + sensorStatus[mav.sysid].z.ToString();
                             if (mav == SwarmInterface.Leader)
                             {
                                 ((Status)ctl).ForeColor = Color.Red;

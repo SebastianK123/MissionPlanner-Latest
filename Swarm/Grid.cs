@@ -73,9 +73,9 @@ namespace MissionPlanner.Swarm
 
         void OnPaint(PaintEventArgsI e)
         { */
-            xline = (this.Width - 1) / (float)xdist;
+            xline = (this.Width) / (float)xdist;
 
-            yline = (this.Height - 1) / (float)ydist;
+            yline = (this.Height) / (float)ydist;
 
             var pen = new Pen(Color.Silver);
             pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
@@ -85,58 +85,39 @@ namespace MissionPlanner.Swarm
                 e.Graphics.DrawImage(BGImage, BGImagex * xline, BGImagey * yline, BGImagew * xline, BGImageh * yline);
             }
 
-            //lines
-            for (float x = 0; x <= xdist; x++)
+            
+            //draw vertical lines in screen space, calculate their worldspace loction(for the text label)
+            float gx = (float)Math.Floor((this.Width) / 8.0);
+            for (float x = 0; x <= this.Width; x += gx)
             {
-                // middle
-                if (x == xdist / 2)
-                {
-                }
-                else if (x % 2 == 0)
-                {
-                    e.Graphics.DrawLine(Pens.Silver, x * xline, 0, x * xline, this.Height);
-                }
-                else
-                {
-                    e.Graphics.DrawLine(pen, x * xline, 0, x * xline, this.Height);
-                }
-            }
-
-            for (float y = 0; y <= ydist; y++)
-            {
-                // middle
-                if (y == ydist / 2.0f)
-                {
-                }
-                else if (y % 2 == 0)
-                {
-                    e.Graphics.DrawLine(Pens.Silver, 0, y * yline, this.Width, y * yline);
-                }
-                else
-                {
-                    e.Graphics.DrawLine(pen, 0, y * yline, this.Width, y * yline);
-                }
-            }
-
-            // draw the middle lines
-            e.Graphics.DrawLine(Pens.Green, xdist / 2 * xline, 0, xdist / 2 * xline, this.Height);
-            e.Graphics.DrawLine(Pens.Green, 0, ydist / 2 * yline, this.Width, ydist / 2 * yline);
-
-            //text
-            for (float x = 1; x <= xdist; x++)
-            {
-                if (x % 2 == 0)
-                    e.Graphics.DrawString(((xdist / -2) + x + centerx).ToString("0.0"), SystemFonts.DefaultFont, Brushes.Red, x * xline,
+                e.Graphics.DrawLine(Pens.Silver, x , 0, x, this.Height);
+                
+                float xLoc =  ((x)/ (this.Width))-0.5f;
+                xLoc *= xdist;
+                xLoc += centerx;
+                if(x != 0)e.Graphics.DrawString(xLoc.ToString("0.0"), SystemFonts.DefaultFont, Brushes.Red, x,
                         0.0f, StringFormat.GenericDefault);
             }
 
-            for (float y = 0; y <= ydist; y++)
+            //draw horizontal lines in screen space, calculate their worldspace loction(for the text label)
+            float gy = (float)Math.Floor((this.Height - 1) / 8.0);
+            for (float y = 0; y <= this.Height; y += gy)
             {
-                if (y % 2 == 0)
-                    e.Graphics.DrawString((((ydist / -2) + y - centery) * -1).ToString("0.0"), SystemFonts.DefaultFont, Brushes.Red, 0.0f,
-                        y * yline, StringFormat.GenericDefault);
+                e.Graphics.DrawLine(Pens.Silver, 0, y, this.Width, y);
+
+                float yLoc = ((y) / (this.Height)) - 0.5f;
+                yLoc *= ydist;
+                yLoc -= centery;
+                yLoc *= -1;
+                e.Graphics.DrawString(yLoc.ToString("0.0"), SystemFonts.DefaultFont, Brushes.Red, 0.0f,
+                                    y, StringFormat.GenericDefault);
             }
 
+            //Draw the origin of the co-ordinate system
+            e.Graphics.DrawLine(Pens.Green, (xdist / 2 - centerx) * xline, 0, (xdist / 2 - centerx) * xline, this.Height);
+            e.Graphics.DrawLine(Pens.Green, 0, (ydist / 2 + centery) * yline, this.Width, (ydist / 2 + centery) * yline);
+
+     
             //icons
             foreach (icon ico in icons)
             {
@@ -319,8 +300,8 @@ namespace MissionPlanner.Swarm
 
             public void OnPaint(PaintEventArgs e, int xdist, int ydist, int width, int height, float centerx, float centery)
             {
-                bounds.X = width / 2 + width / xdist * (x - centerx) - icosize / 2;
-                bounds.Y = height / 2 - height / ydist * (y - centery) - icosize / 2;
+                bounds.X = (0.5f*width)  + ((float)width / xdist) * (x - centerx) - icosize/2;
+                bounds.Y = (0.5f*height) - ((float)height / ydist) * (y - centery) - icosize/2;
                 bounds.Width = icosize;
                 bounds.Height = icosize;
 
@@ -329,7 +310,7 @@ namespace MissionPlanner.Swarm
 
                 e.Graphics.DrawString(Name, SystemFonts.DefaultFont, Brushes.Red, bounds.Right, bounds.Top,
                     StringFormat.GenericDefault);
-                e.Graphics.DrawString(z.ToString(), SystemFonts.DefaultFont, Brushes.Red, bounds.Right, bounds.Bottom,
+                e.Graphics.DrawString(z.ToString("0.0"), SystemFonts.DefaultFont, Brushes.Red, bounds.Right, bounds.Bottom,
                     StringFormat.GenericDefault);
                 // e.ClipRectangle.Width / 2 + e.ClipRectangle.Width / xdist * x - icosize / 2, e.ClipRectangle.Height / 2 + e.ClipRectangle.Height / ydist * y - icosize / 2, icosize, icosize                
             }
