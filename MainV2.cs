@@ -879,8 +879,8 @@ namespace MissionPlanner
                 }
                 else
                 {
-                    int win = NativeMethods.FindWindow("ConsoleWindowClass", null);
-                    NativeMethods.ShowWindow(win, NativeMethods.SW_HIDE); // hide window
+                    NativeMethods.ShowWindow(NativeMethods.GetConsoleWindow(), NativeMethods.SW_HIDE);
+
                 }
 
                 // prevent system from sleeping while mp open
@@ -1178,34 +1178,6 @@ namespace MissionPlanner
                 {
                     return;
                 }
-            }
-
-            if (this.InvokeRequired)
-            {
-                this.BeginInvoke((MethodInvoker) delegate
-                {
-                    //enable the payload control page if a mavlink gimbal is detected
-                    if (instance.FlightData != null)
-                    {
-                        instance.FlightData.updatePayloadTabVisible();
-                    }
-
-                    instance.MyView.Reload();
-
-                    _connectionControl.UpdateSysIDS();
-                });
-            }
-            else
-            {
-                //enable the payload control page if a mavlink gimbal is detected
-                if (instance.FlightData != null)
-                {
-                    instance.FlightData.updatePayloadTabVisible();
-                }
-
-                instance.MyView.Reload();
-
-                _connectionControl.UpdateSysIDS();
             }
         }
 #if !NETSTANDARD2_0
