@@ -146,15 +146,16 @@ namespace MissionPlanner.Swarm
 
         private void BUT_SampleToggle_Click(object sender, EventArgs e)
         {
-            if (SwarmInterface != null && SwarmInterface.GlobalSampleToggle == false)
+            if (SwarmInterface != null && SwarmInterface.GlobalSampleToggle == true)
             {
                 BUT_SampleToggle.Text = "Start Sample";
                 BUT_SampleToggle.BackColor = Color.Green;
                 BUT_SampleToggle.ForeColor = Color.Green;
                 SwarmInterface.MassCommand_ToggleRelay();
+                return;
             }
 
-            if (SwarmInterface != null && SwarmInterface.GlobalSampleToggle == true)
+            if (SwarmInterface != null && SwarmInterface.GlobalSampleToggle == false)
             {
                 BUT_SampleToggle.Text = "Stop Sample";
                 BUT_SampleToggle.BackColor = Color.Red;
