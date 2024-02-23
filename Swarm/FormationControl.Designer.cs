@@ -65,7 +65,7 @@
             this.grid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grid1.Location = new System.Drawing.Point(3, 3);
             this.grid1.Name = "grid1";
-            this.grid1.Size = new System.Drawing.Size(755, 388);
+            this.grid1.Size = new System.Drawing.Size(543, 388);
             this.grid1.TabIndex = 8;
             this.grid1.Vertical = false;
             this.grid1.UpdateOffsets += new MissionPlanner.Swarm.Grid.UpdateOffsetsEvent(this.grid1_UpdateOffsets);
@@ -78,6 +78,7 @@
             this.BUT_Start.Size = new System.Drawing.Size(75, 23);
             this.BUT_Start.TabIndex = 6;
             this.BUT_Start.Text = "Start";
+            this.BUT_Start.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
             this.BUT_Start.UseVisualStyleBackColor = true;
             this.BUT_Start.Click += new System.EventHandler(this.BUT_Start_Click);
             // 
@@ -88,6 +89,7 @@
             this.BUT_leader.Size = new System.Drawing.Size(75, 23);
             this.BUT_leader.TabIndex = 5;
             this.BUT_leader.Text = "Set Leader";
+            this.BUT_leader.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
             this.BUT_leader.UseVisualStyleBackColor = true;
             this.BUT_leader.Click += new System.EventHandler(this.BUT_leader_Click);
             // 
@@ -98,6 +100,7 @@
             this.BUT_Land.Size = new System.Drawing.Size(75, 23);
             this.BUT_Land.TabIndex = 3;
             this.BUT_Land.Text = "Land (all)";
+            this.BUT_Land.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
             this.BUT_Land.UseVisualStyleBackColor = true;
             this.BUT_Land.Click += new System.EventHandler(this.BUT_Land_Click);
             // 
@@ -108,6 +111,7 @@
             this.BUT_Takeoff.Size = new System.Drawing.Size(75, 23);
             this.BUT_Takeoff.TabIndex = 2;
             this.BUT_Takeoff.Text = "Takeoff";
+            this.BUT_Takeoff.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
             this.BUT_Takeoff.UseVisualStyleBackColor = true;
             this.BUT_Takeoff.Click += new System.EventHandler(this.BUT_Takeoff_Click);
             // 
@@ -118,6 +122,7 @@
             this.BUT_Disarm.Size = new System.Drawing.Size(75, 23);
             this.BUT_Disarm.TabIndex = 1;
             this.BUT_Disarm.Text = "Disarm (exl leader)";
+            this.BUT_Disarm.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
             this.BUT_Disarm.UseVisualStyleBackColor = true;
             this.BUT_Disarm.Click += new System.EventHandler(this.BUT_Disarm_Click);
             // 
@@ -128,6 +133,7 @@
             this.BUT_Arm.Size = new System.Drawing.Size(75, 23);
             this.BUT_Arm.TabIndex = 0;
             this.BUT_Arm.Text = "Arm (exl leader)";
+            this.BUT_Arm.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
             this.BUT_Arm.UseVisualStyleBackColor = true;
             this.BUT_Arm.Click += new System.EventHandler(this.BUT_Arm_Click);
             // 
@@ -140,7 +146,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 39);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(769, 420);
+            this.tabControl1.Size = new System.Drawing.Size(557, 420);
             this.tabControl1.TabIndex = 9;
             // 
             // tabPage1
@@ -149,7 +155,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(761, 394);
+            this.tabPage1.Size = new System.Drawing.Size(549, 394);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Stage 1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -162,6 +168,7 @@
             this.BUT_Updatepos.Size = new System.Drawing.Size(75, 23);
             this.BUT_Updatepos.TabIndex = 10;
             this.BUT_Updatepos.Text = "Update Pos";
+            this.BUT_Updatepos.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
             this.BUT_Updatepos.UseVisualStyleBackColor = true;
             this.BUT_Updatepos.Click += new System.EventHandler(this.BUT_Updatepos_Click);
             // 
@@ -170,9 +177,9 @@
             this.PNL_status.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PNL_status.AutoScroll = true;
-            this.PNL_status.Location = new System.Drawing.Point(783, 61);
+            this.PNL_status.Location = new System.Drawing.Point(567, 61);
             this.PNL_status.Name = "PNL_status";
-            this.PNL_status.Size = new System.Drawing.Size(147, 398);
+            this.PNL_status.Size = new System.Drawing.Size(525, 409);
             this.PNL_status.TabIndex = 11;
             // 
             // timer_status
@@ -188,6 +195,7 @@
             this.but_guided.Size = new System.Drawing.Size(75, 23);
             this.but_guided.TabIndex = 12;
             this.but_guided.Text = "Guided Mode (exl leader)";
+            this.but_guided.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
             this.but_guided.UseVisualStyleBackColor = true;
             this.but_guided.Click += new System.EventHandler(this.but_guided_Click);
             // 
@@ -198,12 +206,13 @@
             this.but_auto.Size = new System.Drawing.Size(75, 23);
             this.but_auto.TabIndex = 13;
             this.but_auto.Text = "Auto Mode  (exl leader)";
+            this.but_auto.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
             this.but_auto.UseVisualStyleBackColor = true;
             this.but_auto.Click += new System.EventHandler(this.but_auto_Click);
             // 
             // FormationControl
             // 
-            this.ClientSize = new System.Drawing.Size(931, 471);
+            this.ClientSize = new System.Drawing.Size(1104, 471);
             this.Controls.Add(this.but_auto);
             this.Controls.Add(this.but_guided);
             this.Controls.Add(this.PNL_status);

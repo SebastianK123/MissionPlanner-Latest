@@ -39,6 +39,11 @@ namespace MissionPlanner.Swarm
             get { return this.lbl_spd; }
         }
 
+        public ZedGraph.ZedGraphControl Zed
+        {
+            get { return this.zedGraph_Probe;}
+        }
+
         public Status()
         {
             InitializeComponent();

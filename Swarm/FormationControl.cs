@@ -16,7 +16,8 @@ namespace MissionPlanner.Swarm
         Formation SwarmInterface = null;
         bool threadrun = false;
 
-        Dictionary<int, Vector3f> sensorStatus = new Dictionary<int, Vector3f>();
+        Dictionary<int, List<Vector3f>> sensorStatus = new Dictionary<int, List<Vector3f>>();
+        private const int maxGraphLength = 100;
 
         public FormationControl()
         {
@@ -27,6 +28,7 @@ namespace MissionPlanner.Swarm
             TopMost = true;
 
             Dictionary<String, MAVState> mavStates = new Dictionary<string, MAVState>();
+           
 
             foreach (var port in MainV2.Comports)
             {
@@ -34,8 +36,8 @@ namespace MissionPlanner.Swarm
                 foreach (var mav in port.MAVlist.Where(index => index.compid == (byte)MAVLink.MAV_COMPONENT.MAV_COMP_ID_AUTOPILOT1))
                 { 
                    mavStates.Add(port.BaseStream.PortName + " " + mav.sysid + " " + mav.compid, mav);
-                    //Add the sysId to a list
-                   sensorStatus.Add(mav.sysid, Vector3f.Zero);
+                    //Add the sysId to a dictionary
+                   sensorStatus.Add(mav.sysid, new List<Vector3f>() );
                 }
             }
 
@@ -63,8 +65,14 @@ namespace MissionPlanner.Swarm
             {
                 //Decode the packet as sensor data, store using Mavlink.sysid
                 MAVLink.mavlink_debug_vect_t payload = (MAVLink.mavlink_debug_vect_t)linkMessage.data;
-                Vector3f status = new Vector3f(payload.x, payload.y, payload.z);
-                sensorStatus[linkMessage.sysid] = status;
+                Vector3f status = new Vector3f(payload.x, payload.y, payload.time_usec);
+                sensorStatus[linkMessage.sysid].Add(status);
+                
+                //Check if the list is out of range
+                if(sensorStatus[linkMessage.sysid].Count > maxGraphLength)
+                {
+                    sensorStatus[linkMessage.sysid].RemoveAt(0);
+                }
             }
         }
 
@@ -351,7 +359,14 @@ namespace MissionPlanner.Swarm
                                                          mav.GuidedMode.z;
                             ((Status)ctl).Location1.Text = mav.cs.lat + ",\n" + mav.cs.lng + ",\n" +
                                                             mav.cs.alt;
-                            if(sensorStatus.ContainsKey(mav.sysid))((Status)ctl).Speed.Text = sensorStatus[mav.sysid].x.ToString() + "\n" + sensorStatus[mav.sysid].y.ToString() + "\n" + sensorStatus[mav.sysid].z.ToString();
+                            if (sensorStatus.ContainsKey(mav.sysid))
+                            {
+                                if (sensorStatus[mav.sysid].Count > 0)
+                                {
+                                    ((Status)ctl).Speed.Text = sensorStatus[mav.sysid].Last().x.ToString() + "\n" + sensorStatus[mav.sysid].Last().y.ToString() + "\n" + sensorStatus[mav.sysid].Last().z.ToString();
+                                }
+                            }
+                               
                             if (mav == SwarmInterface.Leader)
                             {
                                 ((Status)ctl).ForeColor = Color.Red;
@@ -360,6 +375,35 @@ namespace MissionPlanner.Swarm
                             {
                                 ((Status)ctl).ForeColor = Color.Black;
                             }
+
+                            //Update ZEDGraph
+                            ZedGraph.ZedGraphControl zed = ((Status)ctl).Zed;
+                            zed.GraphPane.CurveList.Clear();
+
+                            // plot the data as curves
+                            float[] speeds = sensorStatus[mav.sysid].Select(l => l.x).ToArray();
+                            float[] time = sensorStatus[mav.sysid].Select(l => l.z).ToArray();
+                            float[] pitch = sensorStatus[mav.sysid].Select(l => l.y).ToArray();
+
+                            double[] speeds1 = Array.ConvertAll(speeds, x => (double)x);
+                            double[] pitchs1 = Array.ConvertAll(pitch, x => (double)x);
+                            double[] time1 = Array.ConvertAll(time, x => (double)x);
+
+                            var curve1 = zed.GraphPane.AddCurve("Speed", time1, speeds1, Color.Red);
+                            var curve2 = zed.GraphPane.AddCurve("Pitch", time1, pitchs1, Color.Green);
+                            curve1.Line.IsAntiAlias = true;
+                            curve2.Line.IsAntiAlias = true;
+
+                            // style the plot
+                            zed.GraphPane.Title.Text = "Speed series";
+                            zed.GraphPane.XAxis.Title.Text = "Samples (4Hz)";
+                            zed.GraphPane.YAxis.Title.Text = "Speed (m/s)";
+
+                            // auto-axis and update the display
+                            zed.GraphPane.YAxis.Scale.Min = 0;
+                            zed.GraphPane.YAxis.Scale.Max = 20;
+                            zed.GraphPane.XAxis.ResetAutoScale(zed.GraphPane, CreateGraphics());
+                            zed.Refresh();
                         }
                     }
 

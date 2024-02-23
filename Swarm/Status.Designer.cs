@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -41,6 +42,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.lbl_spd = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.zedGraph_Probe = new ZedGraph.ZedGraphControl();
             this.SuspendLayout();
             // 
             // label1
@@ -159,9 +161,24 @@
             this.label8.TabIndex = 12;
             this.label8.Text = "Probe";
             // 
+            // zedGraph_Probe
+            // 
+            this.zedGraph_Probe.Location = new System.Drawing.Point(133, -1);
+            this.zedGraph_Probe.Name = "zedGraph_Probe";
+            this.zedGraph_Probe.ScrollGrace = 0D;
+            this.zedGraph_Probe.ScrollMaxX = 0D;
+            this.zedGraph_Probe.ScrollMaxY = 0D;
+            this.zedGraph_Probe.ScrollMaxY2 = 0D;
+            this.zedGraph_Probe.ScrollMinX = 0D;
+            this.zedGraph_Probe.ScrollMinY = 0D;
+            this.zedGraph_Probe.ScrollMinY2 = 0D;
+            this.zedGraph_Probe.Size = new System.Drawing.Size(354, 226);
+            this.zedGraph_Probe.TabIndex = 14;
+            // 
             // Status
             // 
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.zedGraph_Probe);
             this.Controls.Add(this.lbl_spd);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.lbl_loc);
@@ -176,7 +193,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Status";
-            this.Size = new System.Drawing.Size(130, 224);
+            this.Size = new System.Drawing.Size(486, 224);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -197,5 +214,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lbl_spd;
         private System.Windows.Forms.Label label8;
+        private ZedGraph.ZedGraphControl zedGraph_Probe;
     }
 }
