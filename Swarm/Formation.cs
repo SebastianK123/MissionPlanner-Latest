@@ -21,11 +21,36 @@ namespace MissionPlanner.Swarm
             new Dictionary<MAVState, Tuple<PID, PID, PID, PID>>();
 
         private PointLatLngAlt masterpos = new PointLatLngAlt();
+       
+        private bool globalSampleToggle = false;
+        public bool GlobalSampleToggle
+        {
+            get { return globalSampleToggle;}
+            set
+            {
+                globalSampleToggle = value;
+            }
+
+        }
 
         public void setOffsets(MAVState mav, double x, double y, double z)
         {
             offsets[mav] = new Vector3(x, y, z);
             log.Info(mav.ToString() + " " + offsets[mav].ToString());
+        }
+
+        public void MassCommand_ToggleRelay()
+        {
+            foreach (var port in MainV2.Comports.ToArray())
+            {
+                foreach (var mav in port.MAVlist)
+                {
+                        float val = (GlobalSampleToggle ? 0.0f : 1.0f);
+                        port.doCommand(mav.sysid, mav.compid, MAVLink.MAV_CMD.DO_SET_RELAY, 0, val, 0, 0 ,0 ,0, 0, false);
+
+                }
+            }
+            GlobalSampleToggle = !GlobalSampleToggle;
         }
 
         public Vector3 getOffsets(MAVState mav)

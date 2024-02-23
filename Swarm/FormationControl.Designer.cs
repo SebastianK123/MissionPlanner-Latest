@@ -45,6 +45,7 @@
             this.timer_status = new System.Windows.Forms.Timer(this.components);
             this.but_guided = new MissionPlanner.Controls.MyButton();
             this.but_auto = new MissionPlanner.Controls.MyButton();
+            this.BUT_SampleToggle = new MissionPlanner.Controls.MyButton();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -210,9 +211,21 @@
             this.but_auto.UseVisualStyleBackColor = true;
             this.but_auto.Click += new System.EventHandler(this.but_auto_Click);
             // 
+            // BUT_SampleToggle
+            // 
+            this.BUT_SampleToggle.Location = new System.Drawing.Point(868, 12);
+            this.BUT_SampleToggle.Name = "BUT_SampleToggle";
+            this.BUT_SampleToggle.Size = new System.Drawing.Size(83, 23);
+            this.BUT_SampleToggle.TabIndex = 14;
+            this.BUT_SampleToggle.Text = "Start Sample";
+            this.BUT_SampleToggle.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_SampleToggle.UseVisualStyleBackColor = true;
+            this.BUT_SampleToggle.Click += new System.EventHandler(this.BUT_SampleToggle_Click);
+            // 
             // FormationControl
             // 
             this.ClientSize = new System.Drawing.Size(1104, 471);
+            this.Controls.Add(this.BUT_SampleToggle);
             this.Controls.Add(this.but_auto);
             this.Controls.Add(this.but_guided);
             this.Controls.Add(this.PNL_status);
@@ -253,5 +266,6 @@
         private System.Windows.Forms.Timer timer_status;
         private Controls.MyButton but_guided;
         private Controls.MyButton but_auto;
+        private Controls.MyButton BUT_SampleToggle;
     }
 }
