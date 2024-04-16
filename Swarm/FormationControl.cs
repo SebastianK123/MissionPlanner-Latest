@@ -148,18 +148,18 @@ namespace MissionPlanner.Swarm
         {
             if (SwarmInterface != null && SwarmInterface.GlobalSampleToggle == true)
             {
-                BUT_SampleToggle.Text = "Start Sample";
-                BUT_SampleToggle.BackColor = Color.Green;
-                BUT_SampleToggle.ForeColor = Color.Green;
+                BUT_SampleToggle.Text = "Stop Sample";
+                BUT_SampleToggle.BackColor = Color.Red;
+                BUT_SampleToggle.ForeColor = Color.Red;
                 SwarmInterface.MassCommand_ToggleRelay();
                 return;
             }
 
             if (SwarmInterface != null && SwarmInterface.GlobalSampleToggle == false)
             {
-                BUT_SampleToggle.Text = "Stop Sample";
-                BUT_SampleToggle.BackColor = Color.Red;
-                BUT_SampleToggle.ForeColor = Color.Red;
+                BUT_SampleToggle.Text = "Start Sample";
+                BUT_SampleToggle.BackColor = Color.Green;
+                BUT_SampleToggle.ForeColor = Color.Green;
                 SwarmInterface.MassCommand_ToggleRelay();
             }
         }

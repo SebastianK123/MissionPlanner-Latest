@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using Vector3 = MissionPlanner.Utilities.Vector3;
+using System.Threading.Tasks;
 
 namespace MissionPlanner.Swarm
 {
@@ -45,13 +46,36 @@ namespace MissionPlanner.Swarm
             {
                 foreach (var mav in port.MAVlist)
                 {
+                    
                         float val = (GlobalSampleToggle ? 0.0f : 1.0f);
-                        port.doCommand(mav.sysid, mav.compid, MAVLink.MAV_CMD.DO_SET_RELAY, 0, val, 0, 0 ,0 ,0, 0, false);
+
+                        Task t = Task.Run( () => {
+                        try
+                        {
+                            bool response =  port.doCommandAsync(mav.sysid, mav.compid, MAVLink.MAV_CMD.DO_SET_RELAY, 0, val, 0, 0, 0, 0, 0, true).AwaitSync();
+                                Console.WriteLine("\n");
+                                Console.WriteLine("\n");
+                                Console.WriteLine("\n");
+                                Console.WriteLine("Drone relay responded. Status   " + response.ToString());
+                                Console.WriteLine("\n");
+                                Console.WriteLine("\n"); 
+                                Console.WriteLine("\n");
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+                        });
+                       
+                             
+                   
+                     
 
                 }
             }
             GlobalSampleToggle = !GlobalSampleToggle;
         }
+        
 
         public Vector3 getOffsets(MAVState mav)
         {

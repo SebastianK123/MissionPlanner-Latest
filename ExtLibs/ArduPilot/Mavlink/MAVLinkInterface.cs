@@ -2575,7 +2575,7 @@ Mission Planner waits for 2 valid heartbeat packets before connecting");
 
         public async Task<bool> doCommandAsync(byte sysid, byte compid, MAV_CMD actionid, float p1, float p2, float p3,
             float p4,
-            float p5, float p6, float p7, bool requireack = true, Action uicallback = null)
+            float p5, float p6, float p7, bool requireack = true, Action uicallback = null, Action acknowledgeCallback = null)
         {
             if (BaseStream == null || BaseStream.IsOpen == false)
                 return false;
@@ -2711,6 +2711,7 @@ Mission Planner waits for 2 valid heartbeat packets before connecting");
                         } 
                         else if (ack.result == (byte) MAV_RESULT.ACCEPTED)
                         {
+                            acknowledgeCallback?.Invoke();
                             giveComport = false;
                             return true;
                         }
