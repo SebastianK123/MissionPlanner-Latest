@@ -65,7 +65,7 @@ namespace MissionPlanner.Swarm
             {
                 //Decode the packet as sensor data, store using Mavlink.sysid
                 MAVLink.mavlink_debug_vect_t payload = (MAVLink.mavlink_debug_vect_t)linkMessage.data;
-                Vector3f status = new Vector3f(payload.x, payload.y, payload.time_usec);
+                Vector3f status = new Vector3f(payload.x, payload.y, payload.z);
                 sensorStatus[linkMessage.sysid].Add(status);
                 
                 //Check if the list is out of range
@@ -74,6 +74,7 @@ namespace MissionPlanner.Swarm
                     sensorStatus[linkMessage.sysid].RemoveAt(0);
                 }
             }
+            updateicons();
         }
 
         void FollowLeaderControl_MouseWheel(object sender, MouseEventArgs e)
@@ -90,7 +91,7 @@ namespace MissionPlanner.Swarm
 
         void updateicons()
         {
-            bindingSource1.ResetBindings(false);
+            bindingSource1.ResetBindings(true);
 
             foreach (var port in MainV2.Comports)
             {
@@ -100,7 +101,9 @@ namespace MissionPlanner.Swarm
                     {
                         ((Formation)SwarmInterface).setOffsets(mav, 0, 0, 0);
                         var vector = SwarmInterface.getOffsets(mav);
-                        grid1.UpdateIcon(mav, (float)vector.x, (float)vector.y, (float)vector.z, false);
+                        Vector3f stat = sensorStatus[mav.sysid].LastOrDefault();
+                        float z = stat==null ? 0 : stat.z;
+                        grid1.UpdateIcon(mav, (float)vector.x, (float)vector.y, (float)vector.z, false, z);
                     }
                     else
                     {
@@ -435,6 +438,7 @@ namespace MissionPlanner.Swarm
                     }
                 }
             }
+            updateicons();
         }
 
         private void but_guided_Click(object sender, EventArgs e)

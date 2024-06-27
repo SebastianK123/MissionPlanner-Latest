@@ -145,19 +145,21 @@ namespace MissionPlanner.Swarm
             base.OnResize(e);
         }
 
-        public void UpdateIcon(MAVState mav, float x, float y, float z, bool movable)
+        public void UpdateIcon(MAVState mav, float x, float y, float z, bool movable, float windYaw = 0)
         {
             foreach (var icon in icons)
             {
                 if (icon.interf == mav)
                 {
                     icon.Movable = movable;
+                    icon.yaw = windYaw;
+                    icon.heading = mav.cs.yaw;
                     if (!movable)
                     {
                         icon.x = 0;
                         icon.y = 0;
                         icon.z = 0;
-                        icon.Color = Color.Blue;
+                        icon.Color = Color.Cyan;
                     }
                     else
                     {
@@ -172,7 +174,7 @@ namespace MissionPlanner.Swarm
             }
 
             Console.WriteLine("ADD MAV {0} {1} {2}", x, y, z);
-            icons.Add(new icon() { interf = mav, y = y, z = z, x = x, Movable = movable, Name = mav.ToString() });
+            icons.Add(new icon() { interf = mav, y = y, z = z, x = x, Movable = movable, Name = mav.ToString(), yaw=windYaw, heading=mav.cs.yaw});
             this.Invalidate();
         }
 
@@ -291,7 +293,9 @@ namespace MissionPlanner.Swarm
             public float x = 0;
             public float y = 0;
             public float z = 10;
-            public int icosize = 20;
+            public float yaw = 0;
+            public float heading = 0;
+            public int icosize = 40;
             public RectangleF bounds = new RectangleF();
             public Color Color = Color.Red;
             public String Name = "";
@@ -306,7 +310,13 @@ namespace MissionPlanner.Swarm
                 bounds.Height = icosize;
 
 
-                e.Graphics.DrawPie(new Pen(Color), bounds, 0, 359);
+                e.Graphics.DrawPie(new Pen(Color), bounds, heading-45-90, 90);
+                float vecLength = icosize*2;
+                float x0 = (0.5f * width) + ((float)width / xdist) * (x - centerx);
+                float y0 = (0.5f * height) - ((float)height / ydist) * (y - centery);
+                float x1 = (float)-(vecLength* Math.Sin(((-heading)) * Math.PI / 180)+yaw);
+                float y1 = (float)-(vecLength * Math.Cos(((-heading)) * Math.PI / 180)+yaw);
+                e.Graphics.DrawLine(new Pen(Color), x0, y0, x0+ x1, y0 + y1);
 
                 e.Graphics.DrawString(Name, SystemFonts.DefaultFont, Brushes.Red, bounds.Right, bounds.Top,
                     StringFormat.GenericDefault);
