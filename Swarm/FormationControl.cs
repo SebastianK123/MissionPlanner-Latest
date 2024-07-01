@@ -16,7 +16,23 @@ namespace MissionPlanner.Swarm
         Formation SwarmInterface = null;
         bool threadrun = false;
 
-        Dictionary<int, List<Vector3f>> sensorStatus = new Dictionary<int, List<Vector3f>>();
+        public class Vec4f
+        {
+            public float x { get; set;}
+            public float y { get; set;}
+            public float z { get; set;}
+            public float w { get; set;}
+
+            public Vec4f(float x, float y, float z, float w)
+            {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.w = w;
+            }
+        }
+
+        Dictionary<int, List<Vec4f>> sensorStatus = new Dictionary<int, List<Vec4f>>();
         private const int maxGraphLength = 100;
 
         public FormationControl()
@@ -37,7 +53,7 @@ namespace MissionPlanner.Swarm
                 { 
                    mavStates.Add(port.BaseStream.PortName + " " + mav.sysid + " " + mav.compid, mav);
                     //Add the sysId to a dictionary
-                   sensorStatus.Add(mav.sysid, new List<Vector3f>() );
+                   sensorStatus.Add(mav.sysid, new List<Vec4f>() );
                 }
             }
 
@@ -65,7 +81,7 @@ namespace MissionPlanner.Swarm
             {
                 //Decode the packet as sensor data, store using Mavlink.sysid
                 MAVLink.mavlink_debug_vect_t payload = (MAVLink.mavlink_debug_vect_t)linkMessage.data;
-                Vector3f status = new Vector3f(payload.x, payload.y, payload.z);
+                Vec4f status = new Vec4f(payload.x, payload.y, payload.z, payload.time_usec * 1000);
                 sensorStatus[linkMessage.sysid].Add(status);
                 
                 //Check if the list is out of range
@@ -101,7 +117,7 @@ namespace MissionPlanner.Swarm
                     {
                         ((Formation)SwarmInterface).setOffsets(mav, 0, 0, 0);
                         var vector = SwarmInterface.getOffsets(mav);
-                        Vector3f stat = sensorStatus[mav.sysid].LastOrDefault();
+                        Vec4f stat = sensorStatus[mav.sysid].LastOrDefault();
                         float z = stat==null ? 0 : stat.z;
                         grid1.UpdateIcon(mav, (float)vector.x, (float)vector.y, (float)vector.z, false, z);
                     }
@@ -386,7 +402,9 @@ namespace MissionPlanner.Swarm
                             {
                                 if (sensorStatus[mav.sysid].Count > 0)
                                 {
-                                    ((Status)ctl).Speed.Text = sensorStatus[mav.sysid].Last().x.ToString() + "\n" + sensorStatus[mav.sysid].Last().y.ToString() + "\n" + sensorStatus[mav.sysid].Last().z.ToString();
+                                    float windPitch = sensorStatus[mav.sysid].Last().y;
+                                    windPitch += mav.cs.pitch;
+                                    ((Status)ctl).Speed.Text = sensorStatus[mav.sysid].Last().x.ToString() + "\n" + windPitch.ToString() + "\n" + sensorStatus[mav.sysid].Last().z.ToString();
                                 }
                             }
                                
@@ -405,8 +423,8 @@ namespace MissionPlanner.Swarm
 
                             // plot the data as curves
                             float[] speeds = sensorStatus[mav.sysid].Select(l => l.x).ToArray();
-                            float[] time = sensorStatus[mav.sysid].Select(l => l.z).ToArray();
-                            float[] pitch = sensorStatus[mav.sysid].Select(l => l.y).ToArray();
+                            float[] time = sensorStatus[mav.sysid].Select(l => l.w).ToArray();
+                            float[] pitch = sensorStatus[mav.sysid].Select(l => l.y + (mav.cs.pitch)).ToArray();
 
                             double[] speeds1 = Array.ConvertAll(speeds, x => (double)x);
                             double[] pitchs1 = Array.ConvertAll(pitch, x => (double)x);
