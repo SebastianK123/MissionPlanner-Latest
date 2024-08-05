@@ -107,7 +107,7 @@ namespace MissionPlanner.Swarm
 
         void updateicons()
         {
-            bindingSource1.ResetBindings(true);
+            bindingSource1.ResetBindings(false);
 
             foreach (var port in MainV2.Comports)
             {
