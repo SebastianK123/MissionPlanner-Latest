@@ -124,7 +124,9 @@ namespace MissionPlanner.Swarm
                     else
                     {
                         var vector = SwarmInterface.getOffsets(mav);
-                        grid1.UpdateIcon(mav, (float)vector.x, (float)vector.y, (float)vector.z, true);
+                        Vec4f stat = sensorStatus[mav.sysid].LastOrDefault();
+                        float z = stat == null ? 0 : stat.z;
+                        grid1.UpdateIcon(mav, (float)vector.x, (float)vector.y, (float)vector.z, true, z);
                     }
                 }
             }
