@@ -458,7 +458,6 @@ namespace MissionPlanner.Swarm
                     }
                 }
             }
-            updateicons();
         }
 
         private void but_guided_Click(object sender, EventArgs e)
